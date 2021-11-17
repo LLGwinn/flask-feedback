@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}{{user.username}}{% endblock %}
+
+{% block content %}
+
+<h1 class="display-3">{{user.username}}</h1>
+
+{% if user.username == session['username'] %}
+<form action="/users/{{user.username}}/delete" method='POST'>
+    <button class="btn btn-danger btn-sm" type='submit'>Delete User</button>
+</form>
+{% endif %}
+<hr>
+
+<div><b>Name:</b>  {{user.first_name}} {{user.last_name}}</div>
+<div><b>Email address:</b>  {{user.email}}</div>
+<div>
+    <b>Feedback given:</b>
+    {% if user.username == session['username'] %}
+    <span class='p-3'>
+        <a class='fst-italic text-decoration-none' href='/users/{{user.username}}/feedback/add'>(add feedback)</a>
+    </span>
+    {% endif %}
+</div>
+
+<div class='container mt-2'>
+{% for item in feedback %}
+    <div class="row mx-3 p-1 border">
+        {% if user.username == session['username'] %}
+        <div class="col-md-auto border">
+            <a href="/feedback/{{item.id}}/update" ><i class="fas fa-edit"></i></a>
+        </div>
+        <div class="col-md-auto">
+            <form action="/feedback/{{item.id}}/delete" method='POST'>
+                <button class="btn btn-sm border text-danger" type='submit'><i class="far fa-trash-alt"></i></button>
+            </form>
+        </div>
+        {% endif %}
+        <div class="col-md-auto fst-italic">
+            {{item.title}}: {{item.content}}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+
+{% endblock %}
